@@ -1,11 +1,7 @@
 import random
 
 INF = None
-
 N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
-Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
-Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
-GPoint = (Gx,Gy) #will be using x coordinate as public key
 
 class BlockECC:
 	def __init__(self):
@@ -71,7 +67,7 @@ class BlockECC:
 		y3 = self.get_mod(-u*x3 - v)
 		return (x3, y3)
 
-	def multEcc(self, k):
+	def generate_public_key(self, k):
 		#running through bits of k
 		Q = INF
 		if k == 0:
@@ -87,6 +83,5 @@ class BlockECC:
 
 	def generate_sk_pk(self):
 		self.generate_secret_key()
-		self.multEcc(self.sk)
+		self.generate_public_key(self.sk)
 		return self.sk, self.pk
-		

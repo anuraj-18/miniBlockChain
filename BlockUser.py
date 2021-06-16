@@ -13,3 +13,6 @@ class User:
 
 	def recieveCoins(self, amount):
 		pass
+
+	def sendCoins(self, amount, u_pk):
+		pass
