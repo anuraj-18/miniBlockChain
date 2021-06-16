@@ -2,7 +2,7 @@ import random
 INF = None
 
 P = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 -1 
-N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
+N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
 Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
 GPoint = (Gx,Gy)
@@ -27,6 +27,7 @@ class BlockECC:
 		self.sk = hex(int(sk, 2))
 		print("Your private key is: %s"%(str(self.sk)))
 		self.sk = int(sk, 2)
+
 
 	def check_equal(self, x, y):  
 		return x%self.p == y%self.p
