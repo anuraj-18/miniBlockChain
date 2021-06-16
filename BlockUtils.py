@@ -1,4 +1,3 @@
-import numpy as np 
 import hashlib
 from datetime import datetime
 
@@ -10,4 +9,4 @@ class BlockUtils:
 		return hashlib.sha256(msg.encode()).hexdigest()
 
 	def get_current_timestamp(self):
-        return datetime.now().strftime("%I:%M %p, %d %b, %Y")
+		return datetime.now().strftime("%I:%M %p, %d %b, %Y")

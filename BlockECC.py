@@ -1,32 +1,38 @@
 import random
+
 INF = None
 
-P = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 -1 
 N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
 Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
-GPoint = (Gx,Gy)
-
-privKey = 0xA0DC65FFCA799873CBEA0AC274015B9526505DAAAED385155425F7337704883E #replace with any private key
-pk2 = 1002
-
+GPoint = (Gx,Gy) #will be using x coordinate as public key
 
 class BlockECC:
-	def __init__(self, p, a, b, G):
-		self.p = p
-		self.a = a
-		self.b = b
-		self.G = G
+	def __init__(self):
+		self.p = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 -1 
+		self.a = 0
+		self.b = 7
+
+		Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
+		Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
+
+		self.G = [Gx, Gy]
+
 		self.sk = 0x0
 		self.pk = 0x0
 
 	def generate_secret_key(self):
 		sk = '0b'
-		for i in range(256):
-			sk = sk + str(random.randint(0,1))
-		self.sk = hex(int(sk, 2))
-		print("Your private key is: %s"%(str(self.sk)))
-		self.sk = int(sk, 2)
+		while self.sk == 0x0:
+			for i in range(256):
+				sk = sk + str(random.randint(0,1))
+			if int(sk, 2) >= N:
+				sk = '0b'
+				continue
+			self.sk = hex(int(sk, 2))
+			print("Your private key is: %s"%(str(self.sk)))
+			self.sk = int(sk, 2)
+			break
 
 
 	def check_equal(self, x, y):  
@@ -82,14 +88,5 @@ class BlockECC:
 	def generate_sk_pk(self):
 		self.generate_secret_key()
 		self.multEcc(self.sk)
-
-ec = BlockECC(P, 0, 7, GPoint)
-
-ec.generate_sk_pk()
-
-
-
-
-
-
-
+		return self.sk, self.pk
+		

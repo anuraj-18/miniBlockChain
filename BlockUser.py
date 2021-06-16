@@ -1,8 +1,11 @@
-from BlockUtils.py import BlockUtils as bu 
+from BlockUtils import BlockUtils as bu 
+from BlockECC import BlockECC as Ecc
 from Block import Block as blk 
 
 class User:
 	def __init__(self):
-		self.sk, self.pk = self.generatePairKeys()
-		
+		ecc = Ecc()
+		self.sk, self.pk = ec.generate_sk_pk()
 
+	def mine_block(self):
+		pass
