@@ -17,7 +17,6 @@ class Block:
 		self.blockMinedBy = "will be added"
 
 	def calculate_block_hash(self):
-		#hash after block mine
 		msg = ""
 		msg = msg + "%s+%s+%s+%s+%s+%s+%s" % (str(self.blockId), self.ver, self.timestamp, self.merkleRoot, self.difficulty, self.prevHash, self.blockMinedBy)
 		self.blockHash = bu.get_hash(msg)
