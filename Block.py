@@ -14,7 +14,7 @@ class Block:
 		self.blockHash = ""
 		self.txnList = []
 		self.appNum = 0    #for mining purposes
-		self.blockMinedBy = ""
+		self.blockMinedBy = "will be added"
 
 	def calculate_block_hash(self):
 		#hash after block mine
