@@ -10,3 +10,6 @@ class BlockUtils:
 
 	def get_current_timestamp(self):
 		return datetime.now().strftime("%I:%M %p, %d %b, %Y")
+
+	def sign_msg(self, data):
+		pass
