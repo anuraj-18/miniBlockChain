@@ -2,12 +2,13 @@ from BlockUtils import BlockUtils as bu
 
 MAX_TXN = 5
 CURR_VER = "0.0"
+buObj = bu()
 
 class Block:
 	def __init__(self, bId, diff, prevHash):
 		self.blockId = bId
 		self.ver = CURR_VER
-		self.timestamp = bu.get_current_timestamp()
+		self.timestamp = buObj.get_current_timestamp()
 		self.merkleRoot = ""
 		self.difficulty = diff
 		self.prevHash = prevHash
@@ -19,13 +20,13 @@ class Block:
 	def calculate_block_hash(self):
 		msg = ""
 		msg = msg + "%s+%s+%s+%s+%s+%s+%s" % (str(self.blockId), self.ver, self.timestamp, self.merkleRoot, self.difficulty, self.prevHash, self.blockMinedBy)
-		self.blockHash = bu.get_hash(msg)
+		self.blockHash = buObj.get_hash256(msg)
 
 	def calculate_merkle_root(self):
 		merkleRoot = ""
 		l = len(txnList)
 		if l == 1:
-			self.merkleRoot = bu.get_hash(txnList[0].hash) #merkle root for just single entry
+			self.merkleRoot = buObj.get_hash256(txnList[0].hash) #merkle root for just single entry
 		else:
 			tx_hash = []
 			tx_hashcp = []
@@ -43,7 +44,7 @@ class Block:
 					else:
 						txhash2 = txhash1
 					tx = txhash1+txhash2
-					txhash12 = bu.get_hash(tx)
+					txhash12 = buObj.get_hash256(tx)
 					tx_hashcp.append(txhash12)
 					i = i + 1
 				tx_hash = tx_hashcp.copy()
