@@ -1,5 +1,4 @@
 import random
-from logger import log
 
 INF = None
 N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
@@ -28,6 +27,7 @@ class BlockECC:
 				continue
 			self.sk = int(sk, 2)
 			str_sk = "0x{:X}".format(self.sk)
+			str_sk = str_sk.zfill(64)
 			while len(str_sk) < 66:
 				str_sk = str_sk[0:2] + "0" + str_sk[2:]
 			print("Your private key is: "+str_sk)
@@ -85,6 +85,8 @@ class BlockECC:
 			P = self.addEcc(P, P)
 			k >>= 1
 		self.pk = Q[0]
+		str_pk = "0x{:X}".format(self.pk)
+		str_pk = "0x"+str_pk[2:].zfill(64)
 		if self.pk%2 == 1:
 			print("Your public key is:"+" 03 "+"0x{:X}".format(self.pk))
 		else:
