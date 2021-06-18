@@ -1,4 +1,5 @@
 import random
+from logger import log
 
 INF = None
 N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
@@ -83,9 +84,11 @@ class BlockECC:
 				Q = self.addEcc(Q, P)
 			P = self.addEcc(P, P)
 			k >>= 1
-		self.pk = Q
-		print("Your public key x is:", "03"+str(hex(self.pk[0])[2:]))
-		print("Your public key y is:", "02"+str(hex(self.pk[0])[2:]))
+		self.pk = Q[0]
+		if self.pk%2 == 1:
+			print("Your public key is:"+" 03 "+"0x{:X}".format(self.pk))
+		else:
+			print("Your public key is:"+" 02 "+"0x{:X}".format(self.pk))
 
 	def is_point_on_curve(self, P):
 		(x1, y1) = P
@@ -96,7 +99,5 @@ class BlockECC:
 		self.generate_public_key(self.sk)
 		return self.sk, self.pk
 
-ec = BlockECC()
-# ec.generate_public_key()
-ec.generate_sk_pk()
-
+ecc=BlockECC()
+ecc.generate_sk_pk()
