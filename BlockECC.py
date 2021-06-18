@@ -12,7 +12,7 @@ class BlockECC:
 		Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
 		Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
 
-		self.G = [Gx, Gy]
+		self.G = (Gx, Gy)
 
 		self.sk = 0x0
 		self.pk = 0x0
@@ -25,23 +25,28 @@ class BlockECC:
 			if int(sk, 2) >= N:
 				sk = '0b'
 				continue
-			self.sk = hex(int(sk, 2))
-			print("Your private key is: %s"%(str(self.sk)))
 			self.sk = int(sk, 2)
+			str_sk = "0x{:X}".format(self.sk)
+			while len(str_sk) < 66:
+				str_sk = str_sk[0:2] + "0" + str_sk[2:]
+			print("Your private key is: "+str_sk)
 			break
 
-
 	def check_equal(self, x, y):  
-		return x%self.p == y%self.p
+		return (x-y)%self.p == 0
 
 	def get_mod(self, x):
 		return x%self.p
 
-	def inverse_mod(self, x):
+	def inverse_mod(self, a):
 		#using Fermat's Little Theorem -- > Corollary
-		if self.get_mod(x) == 0:
-			return None
-		return pow(x, self.p-2, self.p)
+		lm, hm = 1,0
+		low, high = a%self.p,self.p
+		while low > 1:
+			ratio = high//low
+			nm, new = hm-lm*ratio, high-low*ratio
+			lm, low, hm, high = nm, new, lm, low
+		return lm % self.p
 
 	def addEcc(self, P1, P2):
 		if P1 == INF:
@@ -58,13 +63,12 @@ class BlockECC:
 			return INF
 
 		if self.check_equal(x1, x2) and self.check_equal(y1, y2):
-			u = self.get_mod((3*x1**2 + self.a) * self.inverse_mod(2*y1))
+			u = self.get_mod((3*x1*x1 + self.a) * self.inverse_mod(2*y1))
 		else:
 			u = self.get_mod((y1 - y2)*self.inverse_mod(x1-x2))
 
-		v = self.get_mod(y1 - u*x1)
-		x3 = self.get_mod(u**2 - x1 -x2)
-		y3 = self.get_mod(-u*x3 - v)
+		x3 = self.get_mod(u*u - x1 - x2)
+		y3 = self.get_mod(u*(x1-x3) - y1)
 		return (x3, y3)
 
 	def generate_public_key(self, k):
@@ -72,16 +76,27 @@ class BlockECC:
 		Q = INF
 		if k == 0:
 			return Q
-
+		P = self.G
 		while k != 0:
+			
 			if k&1 != 0:
-				Q = self.addEcc(Q, self.G)
-			P = self.addEcc(self.G, self.G)
+				Q = self.addEcc(Q, P)
+			P = self.addEcc(P, P)
 			k >>= 1
-		self.pk = Q[0]
-		print("Your public key is:", hex(self.pk))
+		self.pk = Q
+		print("Your public key x is:", "03"+str(hex(self.pk[0])[2:]))
+		print("Your public key y is:", "02"+str(hex(self.pk[0])[2:]))
+
+	def is_point_on_curve(self, P):
+		(x1, y1) = P
+		return self.check_equal(y1*y1, x1*x1*x1 + self.a*x1 + self.b)
 
 	def generate_sk_pk(self):
 		self.generate_secret_key()
 		self.generate_public_key(self.sk)
 		return self.sk, self.pk
+
+ec = BlockECC()
+# ec.generate_public_key()
+ec.generate_sk_pk()
+
